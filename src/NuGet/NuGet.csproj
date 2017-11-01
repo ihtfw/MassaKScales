@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3968CC75-B0EF-4AED-A0AE-0464E8CEF331}</ProjectGuid>
+    <NuGetPackageImportStamp>213c2537</NuGetPackageImportStamp>
+    <OutputPath>bin\</OutputPath>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <ConfigurationName>Debug</ConfigurationName>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <ConfigurationName>Release</ConfigurationName>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <StartupObject />
+  </PropertyGroup>
+  <Target Name="Clean">
+    <ItemGroup>
+      <FilesToDelete Include="$(SolutionDir)NuGetBuild\**\*.*" />
+    </ItemGroup>
+    <Delete Files="@(FilesToDelete)" />
+  </Target>
+  <ItemGroup>
+    <None Include="MassaKScales.nuspec">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MassaKScales\MassaKScales.csproj">
+      <Project>{73aadf71-5238-48f6-956d-86452a7610af}</Project>
+      <Name>MassaKScales</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Target Name="Build" DependsOnTargets="NuGetBuild" />
+  <Target Name="ReBuild" DependsOnTargets="NuGetBuild" />
+  <Target Name="NuGetBuild" DependsOnTargets="Clean">
+    <MakeDir Directories="$(SolutionDir)NuGetBuild" />
+    <Copy SourceFiles="$(SolutionDir)MassaKScales\bin\$(ConfigurationName)\MassaKScales.dll" DestinationFolder="$(SolutionDir)NuGetBuild\Lib\net45" />
+    <Copy SourceFiles="$(SolutionDir)MassaKScales\bin\$(ConfigurationName)\MassaKScales.XML" DestinationFolder="$(SolutionDir)NuGetBuild\Lib\net45" />
+    <Copy SourceFiles="$(SolutionDir)MassaKScales\bin\$(ConfigurationName)\MassaKScales.pdb" DestinationFolder="$(SolutionDir)NuGetBuild\Lib\net45" />
+    <Copy SourceFiles="$(SolutionDir)NuGet\MassaKScales.nuspec" DestinationFolder="$(SolutionDir)NuGetBuild" />
+    <PepitaPackage.CreatePackageTask NuGetBuildDirectory="$(SolutionDir)NuGetBuild" MetadataAssembly="$(SolutionDir)MassaKScales\bin\$(ConfigurationName)\MassaKScales.dll" />
+  </Target>
+  <Import Project="..\packages\PepitaPackage.1.21.4\build\PepitaPackage.targets" Condition="Exists('..\packages\PepitaPackage.1.21.4\build\PepitaPackage.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\PepitaPackage.1.21.4\build\PepitaPackage.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\PepitaPackage.1.21.4\build\PepitaPackage.targets'))" />
+  </Target>
+</Project>

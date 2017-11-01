@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>MassaKScales</id>
+    <description>.net wrapper for Com library ScalesMassaK</description>
+    <projectUrl>https://github.com/ihtfw/MassaKScales</projectUrl>
+    <licenseUrl>https://raw.githubusercontent.com/ihtfw/MassaKScales/master/License.txt</licenseUrl>
+    <iconUrl>https://raw.githubusercontent.com/ihtfw/MassaKScales/master/resources/icon.jpg</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <tags>MassaK scales</tags>
+  </metadata>
+</package>
