@@ -47,26 +47,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EmbeddedResourcesExporter.cs" />
     <Compile Include="Exceptions\ConnectionException.cs" />
-    <Compile Include="Exceptions\GetInfoException.cs" />
     <Compile Include="Exceptions\NotIsConnectedException.cs" />
     <Compile Include="MassaKScales.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="ScalesMassaK.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="ScalesMassaK">
-      <Guid>{721BA90E-DAB2-4610-B7C0-7003804BC83A}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>2</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="key.snk" />

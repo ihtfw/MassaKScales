@@ -11,5 +11,8 @@ namespace MassaKScales.Exceptions
         public ConnectionException() : base("Failed to connect to scales")
         {
         }
+        public ConnectionException(Exception e) : base("Failed to connect to scales", e)
+        {
+        }
     }
 }

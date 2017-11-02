@@ -2,35 +2,22 @@
 
 namespace MassaKScales
 {
-    using System.IO;
-    using System.Reflection;
+    using System.IO.Ports;
 
     using global::MassaKScales.Exceptions;
 
-    using ScalesMassaK;
-
     public class MassaKScales : IDisposable
     {
-        private readonly Scale scale = new ScalesMassaK.Scale();
+        private SerialPort serialPort;
         private readonly object lockObject = new object();
-
-        public MassaKScales()
-        {
-            var dllName = "ScalesMassaK.dll";
-            var exportPath = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, dllName);
-            if (!File.Exists(exportPath))
-            {
-                Assembly.GetExecutingAssembly().ExtractResourceToFile(dllName, exportPath);
-            }
-        }
-
+        
         public bool IsConnected { get; private set; }
         public void Disconnect()
         {
             lock (lockObject)
             {
-                scale.CloseConnection();
-
+                serialPort?.Dispose();
+                serialPort = null;
                 IsConnected = false;
             }
         }
@@ -41,17 +28,34 @@ namespace MassaKScales
             {
                 Disconnect();
 
-                scale.Connection = comPort;
-                if (scale.OpenConnection() == 0)
+                try
                 {
+                    serialPort = new SerialPort(comPort)
+                                 {
+                                     BaudRate = 4800,
+                                     Parity = Parity.Even,
+                                     DataBits = 8,
+                                     StopBits = StopBits.One,
+                                     ReadTimeout = 3000
+                                 };
+                    serialPort.Open();
+
+                    serialPort.Write(new byte[] { 0x44 }, 0, 1);
+                    var response = ReadResponse();
+                    if (response == null)
+                        throw new ConnectionException();
+
                     IsConnected = true;
-                    return;
                 }
-                
-                throw new ConnectionException();
+                catch (Exception e)
+                {
+                    throw new ConnectionException(e);
+                }
             }
         }
         
+        
+
         /// <summary>
         /// In gramms
         /// </summary>
@@ -65,26 +69,30 @@ namespace MassaKScales
                     throw new ConnectionException();
                 }
 
-                var res = scale.ReadWeight();
-                if (res != 0)
-                {
-                    throw new GetInfoException("Weigth");
-                }
+                serialPort.Write(new byte[] { 0x45 }, 0, 1);
 
-                switch (scale.Division)
-                {
-                    case 0: //mg
-                        return scale.Weight * 10.0; 
-                    case 1: //g
-                        return scale.Weight;
-                    case 2: //kg
-                        return scale.Weight / 1000.0;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(scale.Division), $"scale.Division was {scale.Division}");
-                }
+                var response = ReadResponse();
+
+                var w = response[1] * 256 + response[0];
+
+                return w;
             }
         }
-        
+
+        private byte[] ReadResponse()
+        {
+            var length = 2;
+            var response = new byte[length];
+            var offset = 0;
+            while (offset < length)
+            {
+                var b = serialPort.ReadByte();
+                response[offset] = (byte)b;
+                offset++;
+            }
+            return response;
+        }
+
         public void Dispose()
         {
             Disconnect();

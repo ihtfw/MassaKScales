@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>MassaKScales</id>
-    <description>.net wrapper for Com library ScalesMassaK</description>
+    <description>.net library for Scales MassaK</description>
     <projectUrl>https://github.com/ihtfw/MassaKScales</projectUrl>
     <licenseUrl>https://raw.githubusercontent.com/ihtfw/MassaKScales/master/License.txt</licenseUrl>
     <iconUrl>https://raw.githubusercontent.com/ihtfw/MassaKScales/master/resources/icon.jpg</iconUrl>

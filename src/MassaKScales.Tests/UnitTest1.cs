@@ -7,7 +7,7 @@ namespace MassaKScales.Tests
     public class UnitTest1
     {
         [TestMethod]
-        public void TestMethod1()
+        public void GetWeightTest()
         {
             using (var scales = new MassaKScales())
             {
@@ -16,8 +16,7 @@ namespace MassaKScales.Tests
                 Assert.IsTrue(scales.IsConnected);
 
                 var weight = scales.GetWeight();
-
-
+                Assert.AreEqual(0, weight);
             }
         }
     }
